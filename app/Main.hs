@@ -6,7 +6,7 @@ import Control.Lens
 import Data.Foldable
 import Data.List
 import Data.Maybe
-import qualified Data.Map as M
+import qualified Data.Map.Strict as M
 
 import Linear.V2
 
@@ -18,7 +18,7 @@ import Options.Applicative hiding (Parser)
 
 import System.Random.Shuffle
 
-import Debug.Trace
+--import Debug.Trace
 
 data PokerHand
   = HighCard Card
@@ -26,22 +26,37 @@ data PokerHand
   | TwoPair (Card, Card) (Card, Card)
   | ThreeOfAKind (Card, Card, Card)
   | Straight (Card, Card, Card, Card, Card)
-  | Flush (Card, Card, Card, Card, Card)
   | FullHouse (Card, Card, Card) (Card, Card)
+  | Flush (Card, Card, Card, Card, Card)
   | FourOfAKind (Card, Card, Card, Card)
   | StraightFlush (Card, Card, Card, Card, Card)
+  | DoubleStraightFlush 
+      (Card, Card, Card, Card, Card) 
+      (Card, Card, Card, Card, Card)
+  | TripleStraightFlush 
+      (Card, Card, Card, Card, Card) 
+      (Card, Card, Card, Card, Card)
+      (Card, Card, Card, Card, Card)
+  | QuadStraightFlush 
+      (Card, Card, Card, Card, Card) 
+      (Card, Card, Card, Card, Card) 
+      (Card, Card, Card, Card, Card) 
+      (Card, Card, Card, Card, Card)
   deriving (Show, Eq, Ord)
 
 constrEnum :: PokerHand -> Int
-constrEnum HighCard{}      = 0
-constrEnum OnePair{}       = 1
-constrEnum TwoPair{}       = 2
-constrEnum ThreeOfAKind{}  = 3
-constrEnum Straight{}      = 4
-constrEnum Flush{}         = 5
-constrEnum FullHouse{}     = 6
-constrEnum FourOfAKind{}   = 7
-constrEnum StraightFlush{} = 8
+constrEnum HighCard{}            = 0
+constrEnum OnePair{}             = 1
+constrEnum TwoPair{}             = 2
+constrEnum ThreeOfAKind{}        = 3
+constrEnum Straight{}            = 4
+constrEnum FullHouse{}           = 5
+constrEnum Flush{}               = 6
+constrEnum FourOfAKind{}         = 7
+constrEnum StraightFlush{}       = 8
+constrEnum DoubleStraightFlush{} = 9
+constrEnum TripleStraightFlush{} = 10
+constrEnum QuadStraightFlush{}   = 11
 
 follows :: Card -> Card -> Bool
 follows x y
@@ -50,19 +65,29 @@ follows x y
   | otherwise = _cRank x == succ (_cRank y)
 
 handStrength :: [Card] -> PokerHand
-handStrength hand = fromMaybe (highCard hand) $ asum
-  [ straightFlush sorted
+handStrength hand = fromJust . asum $ handStrengths hand
+
+allHands :: [Card] -> [PokerHand]
+allHands = catMaybes . handStrengths
+
+handStrengths :: [Card] -> [Maybe PokerHand]
+handStrengths hand =
+  [ quadStraightFlush sorted
+  , tripleStraightFlush sorted
+  , doubleStraightFlush sorted
+  , straightFlush sorted
   , fourOfAKind sorted
-  , fullHouse sorted
   , flush sorted
+  , fullHouse sorted
   , straight sorted
   , threeOfAKind sorted
   , twoPair sorted
   , onePair sorted
+  , highCard hand
   ]
   where
-    sorted = sort hand
-    highCard = HighCard . maximum
+    sorted = reverse $ sort hand
+    highCard = Just . HighCard . head
     fullHouse :: [Card] -> Maybe PokerHand
     fullHouse hand =
       do
@@ -74,16 +99,33 @@ handStrength hand = fromMaybe (highCard hand) $ asum
         let x1:x2:x3:_ = ranked !! xIdx
         let y1:y2:_    = (l <> r) !! yIdx
         return $ FullHouse (x1, x2, x3) (y1, y2)
-
+    takeFlushes n cards =
+      do
+        let suited = groupBy (\x y -> _cSuit x == _cSuit y) $ sortOn _cSuit cards
+        let straightsBySuit = fmap (\(Straight x) -> x) . catMaybes $ straight <$> suited
+        if length straightsBySuit < n
+          then Nothing
+          else Just . take n $ sort straightsBySuit
+    quadStraightFlush :: [Card] -> Maybe PokerHand
+    quadStraightFlush hand =
+      do
+        x1:x2:x3:x4:_ <- takeFlushes 4 hand
+        return $ QuadStraightFlush x1 x2 x3 x4
+    tripleStraightFlush :: [Card] -> Maybe PokerHand
+    tripleStraightFlush hand =
+      do
+        x1:x2:x3:_ <- takeFlushes 3 hand
+        return $ TripleStraightFlush x1 x2 x3
+    doubleStraightFlush :: [Card] -> Maybe PokerHand
+    doubleStraightFlush hand =
+      do
+        x1:x2:_ <- takeFlushes 2 hand
+        return $ DoubleStraightFlush x1 x2
     straightFlush :: [Card] -> Maybe PokerHand
     straightFlush hand =
       do
-        let suited = groupBy (\x y -> _cSuit x == _cSuit y) $ sortOn _cSuit hand
-        let straightsBySuit = catMaybes $ straight <$> suited
-        Straight x <- if null straightsBySuit
-                        then Nothing
-                        else Just $ maximum straightsBySuit
-        return $ StraightFlush x
+        x1:_ <- takeFlushes 1 hand
+        return $ StraightFlush x1
     flush :: [Card] -> Maybe PokerHand
     flush hand = 
       do
@@ -94,26 +136,26 @@ handStrength hand = fromMaybe (highCard hand) $ asum
     fourOfAKind hand =
       do
         let ranked = groupBy (\x y -> _cRank x == _cRank y) hand
-        [x1, x2, x3, x4] <- find ((==4) . length) ranked
+        [x1, x2, x3, x4] <- find ((>=4) . length) ranked
         return $ FourOfAKind (x1, x2, x3, x4)
 
     threeOfAKind :: [Card] -> Maybe PokerHand
     threeOfAKind hand =
       do
         let ranked = groupBy (\x y -> _cRank x == _cRank y) hand
-        [x1, x2, x3] <- find ((==3) . length) ranked
+        [x1, x2, x3] <- find ((>=3) . length) ranked
         return $ ThreeOfAKind (x1, x2, x3)
     onePair :: [Card] -> Maybe PokerHand
     onePair hand =
       do
         let ranked = groupBy (\x y -> _cRank x == _cRank y) hand
-        [x1, x2] <- find ((==2) . length) ranked
+        [x1, x2] <- find ((>=2) . length) ranked
         return $ OnePair (x1, x2)
     twoPair :: [Card] -> Maybe PokerHand
     twoPair hand =
       do
         let ranked = groupBy (\x y -> _cRank x == _cRank y) hand
-        let idxs = findIndices ((==2) . length) ranked
+        let idxs = findIndices ((>=2) . length) ranked
         guard $ length idxs >= 2
         let x:y:_ = idxs
         let p1 = ranked !! x
@@ -125,10 +167,10 @@ handStrength hand = fromMaybe (highCard hand) $ asum
         let aces = filter ((==RA) . _cRank) hand'
         let hand = aces <> hand'
         let checkStraight (x1:x2:x3:x4:x5:t)
-              | x1 `follows` x2 &&
-                x2 `follows` x3 &&
-                x3 `follows` x4 &&
-                x4 `follows` x5 = Just $ Straight (x1, x2, x3, x4, x5)
+              | x2 `follows` x1 &&
+                x3 `follows` x2 &&
+                x4 `follows` x3 &&
+                x5 `follows` x4 = Just $ Straight (x1, x2, x3, x4, x5)
               | otherwise = checkStraight $ x2:x3:x4:x5:t
             checkStraight _ = Nothing
         --traceShowM $ sortOn (Down . _cRank) hand
@@ -187,7 +229,7 @@ parseArgs = Config
         ])
 
 deck :: [Card]
-deck = Card <$> [R2 ..] <*> [Clubs ..]
+deck = drop 28 $ Card <$> [R2 ..] <*> [Clubs ..]
 
 axis :: [[Double]] -> Axis B V2 Double
 axis res = r2Axis &~
@@ -197,17 +239,15 @@ axis res = r2Axis &~
 main :: IO ()
 main = 
   do
---    cfg <- execParser $ info parseArgs fullDesc
---    inp <- if null $ _cfgInput cfg
---      then return []
---      else readFile $ _cfgInput cfg
     let iterations = 50000
-    res <- forM [1..52] $ \cardCount -> do
+    res <- forM [1..length deck] $ \cardCount -> do
       print cardCount
-      let b = M.fromList ([0..8] `zip` repeat 0)
+      let b = M.fromList ([0..11] `zip` repeat 0)
       x <- forM [0..iterations] $ \_ -> do
         shuffled <- take cardCount <$> shuffleM deck
-        return $ M.singleton (constrEnum $ handStrength shuffled) 1
+        --return $ M.singleton (constrEnum $ handStrength shuffled) 1
+        let hands = allHands shuffled
+        return . M.fromList $ map (\h -> (constrEnum $ head h, 1)) $ group hands
       return . fmap (/iterations) . M.elems $ M.unionsWith (+) (b:x)
     r2AxisMain $ axis res
 
