@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   height="540.42969"
+   stroke-opacity="1"
+   viewBox="0 0 503.18549 540.42969"
+   font-size="1px"
+   width="503.18549"
+   stroke="#000000"
+   version="1.1"
+   id="svg3268"
+   sodipodi:docname="labels.svg"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07, custom)"
+   inkscape:export-filename="/home/sherk/Projects/bluff-odds/24-cards.png"
+   inkscape:export-xdpi="188.94606"
+   inkscape:export-ydpi="188.94606">
+  <metadata
+     id="metadata3272">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="1"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1052"
+     id="namedview3270"
+     showgrid="false"
+     fit-margin-top="10"
+     lock-margins="true"
+     fit-margin-left="10"
+     fit-margin-right="10"
+     fit-margin-bottom="10"
+     inkscape:zoom="1.9142589"
+     inkscape:cx="215.01558"
+     inkscape:cy="327.56761"
+     inkscape:window-x="1680"
+     inkscape:window-y="28"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg3268"
+     inkscape:document-rotation="0" />
+  <defs
+     id="defs2" />
+  <text
+     xml:space="preserve"
+     style="font-size:13.3333px;line-height:1.25;font-family:sans-serif"
+     x="362.48657"
+     y="246.28989"
+     id="text3276"
+     transform="rotate(45)"><tspan
+       sodipodi:role="line"
+       id="tspan3274"
+       x="362.48657"
+       y="246.28989">High card</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:13.3333px;line-height:1.25;font-family:sans-serif"
+     x="382.04861"
+     y="226.72791"
+     id="text3276-3"
+     transform="rotate(45)"><tspan
+       sodipodi:role="line"
+       id="tspan3274-6"
+       x="382.04861"
+       y="226.72791">One pair</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:13.3333px;line-height:1.25;font-family:sans-serif"
+     x="401.61063"
+     y="207.16588"
+     id="text3276-7"
+     transform="rotate(45)"><tspan
+       sodipodi:role="line"
+       id="tspan3274-5"
+       x="401.61063"
+       y="207.16588">Two pair</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:13.3333px;line-height:1.25;font-family:sans-serif"
+     x="421.17264"
+     y="187.60387"
+     id="text3276-35"
+     transform="rotate(45)"><tspan
+       sodipodi:role="line"
+       id="tspan3274-62"
+       x="421.17264"
+       y="187.60387">Three of a kind</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:13.3333px;line-height:1.25;font-family:sans-serif"
+     x="440.73465"
+     y="168.04185"
+     id="text3276-9"
+     transform="rotate(45)"><tspan
+       sodipodi:role="line"
+       id="tspan3274-1"
+       x="440.73465"
+       y="168.04185">Straight</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:13.3333px;line-height:1.25;font-family:sans-serif"
+     x="460.29666"
+     y="148.47983"
+     id="text3276-2"
+     transform="rotate(45)"><tspan
+       sodipodi:role="line"
+       id="tspan3274-7"
+       x="460.29666"
+       y="148.47983">Flush</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:13.3333px;line-height:1.25;font-family:sans-serif"
+     x="479.85867"
+     y="128.91782"
+     id="text3276-0"
+     transform="rotate(45)"><tspan
+       sodipodi:role="line"
+       id="tspan3274-9"
+       x="479.85867"
+       y="128.91782">Full house</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:13.3333px;line-height:1.25;font-family:sans-serif"
+     x="499.42068"
+     y="109.3558"
+     id="text3276-36"
+     transform="rotate(45)"><tspan
+       sodipodi:role="line"
+       id="tspan3274-0"
+       x="499.42068"
+       y="109.3558">Four of a kind</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:13.3333px;line-height:1.25;font-family:sans-serif"
+     x="518.98273"
+     y="89.793777"
+     id="text3276-6"
+     transform="rotate(45)"><tspan
+       sodipodi:role="line"
+       id="tspan3274-2"
+       x="518.98273"
+       y="89.793777">Straight flush</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:13.3333px;line-height:1.25;font-family:sans-serif"
+     x="538.5448"
+     y="70.231758"
+     id="text3276-61"
+     transform="rotate(45)"><tspan
+       sodipodi:role="line"
+       id="tspan3274-8"
+       x="538.5448"
+       y="70.231758">Double straight flush</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:13.3333px;line-height:1.25;font-family:sans-serif"
+     x="558.10681"
+     y="50.669739"
+     id="text3276-79"
+     transform="rotate(45)"><tspan
+       sodipodi:role="line"
+       id="tspan3274-20"
+       x="558.10681"
+       y="50.669739">Triple straight flush</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:13.3333px;line-height:1.25;font-family:sans-serif"
+     x="577.66882"
+     y="31.107725"
+     id="text3276-23"
+     transform="rotate(45)"><tspan
+       sodipodi:role="line"
+       id="tspan3274-75"
+       x="577.66882"
+       y="31.107725">Quadruple straight flush</tspan></text>
+</svg>

@@ -49,8 +49,8 @@ constrEnum HighCard{}            = 0
 constrEnum OnePair{}             = 1
 constrEnum TwoPair{}             = 2
 constrEnum ThreeOfAKind{}        = 3
-constrEnum Straight{}            = 4
-constrEnum FullHouse{}           = 5
+constrEnum FullHouse{}           = 4
+constrEnum Straight{}            = 5
 constrEnum Flush{}               = 6
 constrEnum FourOfAKind{}         = 7
 constrEnum StraightFlush{}       = 8
@@ -78,9 +78,9 @@ handStrengths hand =
   , straightFlush sorted
   , fourOfAKind sorted
   , flush sorted
-  , fullHouse sorted
   , straight sorted
   , threeOfAKind sorted
+  , fullHouse sorted
   , twoPair sorted
   , onePair sorted
   , highCard hand
@@ -130,26 +130,29 @@ handStrengths hand =
     flush hand = 
       do
         let suited = groupBy (\x y -> _cSuit x == _cSuit y) $ sortOn _cSuit hand
-        [x1, x2, x3, x4, x5] <- find ((>= 5) . length) suited
+        x1:x2:x3:x4:x5:_ <- find ((>= 5) . length) suited
         return $ Flush (x1, x2, x3, x4, x5)
+    findRepeats :: Int -> [Card] -> Maybe [Card]
+    findRepeats n hand =
+      do
+        let ranked = groupBy (\x y -> _cRank x == _cRank y) hand
+        find ((>=n) . length) ranked
+      
     fourOfAKind :: [Card] -> Maybe PokerHand
     fourOfAKind hand =
       do
-        let ranked = groupBy (\x y -> _cRank x == _cRank y) hand
-        [x1, x2, x3, x4] <- find ((>=4) . length) ranked
+        x1:x2:x3:x4:_ <- findRepeats 4 hand
         return $ FourOfAKind (x1, x2, x3, x4)
 
     threeOfAKind :: [Card] -> Maybe PokerHand
     threeOfAKind hand =
       do
-        let ranked = groupBy (\x y -> _cRank x == _cRank y) hand
-        [x1, x2, x3] <- find ((>=3) . length) ranked
+        x1:x2:x3:_ <- findRepeats 3 hand
         return $ ThreeOfAKind (x1, x2, x3)
     onePair :: [Card] -> Maybe PokerHand
     onePair hand =
       do
-        let ranked = groupBy (\x y -> _cRank x == _cRank y) hand
-        [x1, x2] <- find ((>=2) . length) ranked
+        x1:x2:_ <- findRepeats 2 hand
         return $ OnePair (x1, x2)
     twoPair :: [Card] -> Maybe PokerHand
     twoPair hand =
@@ -175,7 +178,7 @@ handStrengths hand =
             checkStraight _ = Nothing
         --traceShowM $ sortOn (Down . _cRank) hand
         --traceShowM $ reverse hand
-        checkStraight $ reverse hand
+        checkStraight . reverse . map head $ groupBy (\x y -> _cRank x == _cRank y) hand
 
 data Rank
   = R2
@@ -239,7 +242,7 @@ axis res = r2Axis &~
 main :: IO ()
 main = 
   do
-    let iterations = 50000
+    let iterations = 500000
     res <- forM [1..length deck] $ \cardCount -> do
       print cardCount
       let b = M.fromList ([0..11] `zip` repeat 0)
